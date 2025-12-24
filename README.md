@@ -107,3 +107,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   </React.StrictMode>
 );
 ```
+
+
+LICENSE: GPL-3.0
