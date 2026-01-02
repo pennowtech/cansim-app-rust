@@ -39,19 +39,23 @@ type SidebarMode = "expanded" | "icon";
 export type AppState = {
   view: AppView;
   sidebarMode: SidebarMode;
+  isMobile: boolean;
 
   setView: (view: AppView) => void;
   toggleSidebarMode: () => void;
+  setIsMobile: (v: boolean) => void;
 };
 
 // Create the Zustand store for application shell state
 // - manages active view and sidebar mode
+// - provides mobile detection state
 // - provides methods to update state
 // - initial view is "monitor" and sidebar is "expanded"
 // - no derived state, pure UI concerns
 export const useAppStore = create<AppState>((set) => ({
   view: "monitor",
   sidebarMode: "expanded",
+  isMobile: false,
 
   setView: (view) => set({ view }),
 
@@ -59,4 +63,6 @@ export const useAppStore = create<AppState>((set) => ({
     set((s) => ({
       sidebarMode: s.sidebarMode === "expanded" ? "icon" : "expanded",
     })),
+
+  setIsMobile: (v) => set({ isMobile: v }),
 }));
