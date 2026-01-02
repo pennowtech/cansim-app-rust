@@ -21,21 +21,31 @@
  */
 
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 import { commandRegistry } from "@/commands/registry";
 import { useCommandPaletteStore } from "@/store/commandPaletteStore";
 import { useAppStore } from "@/store/appShellStore";
 import { useTheme } from "@/components/ThemeProvider";
+import { useConnectDialogStore } from "@/store/canConnectDialogStore";
+import { useUiStore } from "@/store/uiStore";
 
 export function CommandPalette() {
   const { open, closePalette } = useCommandPaletteStore();
   const setView = useAppStore((s) => s.setView);
   const { setTheme } = useTheme();
+  const openConnectDialog = useConnectDialogStore((s) => s.openDialog);
+  const openConnectionManager = useUiStore((s) => s.openConnectionManager);
 
   return (
     <Dialog open={open} onOpenChange={closePalette}>
       <DialogContent className="p-0">
+        {/* ✅ ACCESSIBILITY FIX */}
+        <VisuallyHidden>
+          <DialogTitle>Command Palette</DialogTitle>
+          <DialogDescription>Search and run application commands</DialogDescription>
+        </VisuallyHidden>{" "}
         <Command>
           <CommandInput placeholder="Type a command…" />
           <CommandEmpty>No commands found.</CommandEmpty>
@@ -46,7 +56,7 @@ export function CommandPalette() {
                 key={cmd.id}
                 value={[cmd.title, ...(cmd.keywords ?? [])].join(" ")}
                 onSelect={() => {
-                  cmd.handler({ setView, setTheme });
+                  cmd.handler({ setView, setTheme, openConnectDialog, openConnectionManager });
                   closePalette();
                 }}
               >
