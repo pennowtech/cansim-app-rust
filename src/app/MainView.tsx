@@ -22,23 +22,27 @@
  */
 
 import { CanConnectionManagerDialog } from "@/components/CanConnectionManagerDialog";
+import { HelpShell } from "@/components/help-system/HelpShell";
 import { useAppStore } from "@/store/appShellStore";
 import { useConnectDialogStore } from "@/store/canConnectDialogStore";
 import { useConnectionStore } from "@/store/connectionStore";
+import { useHelpStore } from "@/store/helpStore";
 import { useState } from "react";
 // import { EditorShell } from "@/editor/EditorShell";
 
 export function MainView() {
   const view = useAppStore((s) => s.view);
 
-  const [open, setOpen] = useState(false);
+  const [connectOpen, setConnectOpen] = useState(false);
+  const setHelpOpen = useHelpStore((s) => s.openHelp);
+  const isHelpOpen = useHelpStore((s) => s.isOpen);
 
   switch (view) {
     case "profile-editor":
       return <div className="p-6 text-muted-foreground">Editor Shell (coming next)</div>;
 
     case "monitor":
-      return <CanConnectionManagerDialog open={open} onOpenChange={setOpen} />;
+      return <CanConnectionManagerDialog open={connectOpen} onOpenChange={setConnectOpen} />;
 
     case "simulator":
       return <div className="p-6 text-muted-foreground">CAN Simulator (TX) (coming next)</div>;
@@ -47,7 +51,10 @@ export function MainView() {
       return <div className="p-6 text-muted-foreground">Settings</div>;
 
     case "help":
-      return <div className="p-6 text-muted-foreground">Help</div>;
+      {
+        console.log("Help view selected", isHelpOpen);
+      }
+      return <HelpShell />;
 
     default:
       return null;
