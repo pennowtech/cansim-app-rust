@@ -28,6 +28,7 @@ import { useConnectDialogStore } from "@/store/canConnectDialogStore";
 import { useConnectionStore } from "@/store/connectionStore";
 import { useHelpStore } from "@/components/help-system/store/helpStore";
 import { useState } from "react";
+import { EditorShell } from "@/editor/EditorShell";
 // import { EditorShell } from "@/editor/EditorShell";
 
 export function MainView() {
@@ -39,7 +40,7 @@ export function MainView() {
 
   switch (view) {
     case "profile-editor":
-      return <div className="p-6 text-muted-foreground">Editor Shell (coming next)</div>;
+      return <EditorShell />;
 
     case "monitor":
       return <CanConnectionManagerDialog open={connectOpen} onOpenChange={setConnectOpen} />;
