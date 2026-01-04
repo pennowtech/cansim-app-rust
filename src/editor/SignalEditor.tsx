@@ -4,21 +4,24 @@ import { PayloadPreview } from "@/components/PayloadPreview";
 import { highlightForSignal } from "./utils/signalHighlight";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
 
 export function SignalEditor({ frameId, signalId }: { frameId: string; signalId: string }) {
   const { profile, updateProfile } = useEditorStore();
   const { frames, selectedIndex, selectIndex } = usePreviewStore();
+  const [previewMode, setPreviewMode] = useState<"compact" | "expanded">("compact");
 
   const signal = profile.frames[frameId].signals[signalId];
 
   const sampleFrame = frames[selectedIndex];
   const payload = sampleFrame?.data ?? new Uint8Array(0);
 
-  console.log("Signal Editor log");
+  console.log("Signal Editor log:", JSON.stringify(signal, null, 2));
   return (
     <div className="flex-1 p-6 space-y-6 overflow-auto">
       {/* Header */}
@@ -132,6 +135,10 @@ export function SignalEditor({ frameId, signalId }: { frameId: string; signalId:
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Live Payload Preview</CardTitle>
+          <ToggleGroup type="single" value={previewMode} onValueChange={(v) => v && setPreviewMode(v as any)}>
+            <ToggleGroupItem value="compact">Compact</ToggleGroupItem>
+            <ToggleGroupItem value="expanded">Expanded</ToggleGroupItem>
+          </ToggleGroup>
 
           {frames.length > 1 && (
             <Select value={String(selectedIndex)} onValueChange={(v) => selectIndex(Number(v))}>
@@ -150,7 +157,7 @@ export function SignalEditor({ frameId, signalId }: { frameId: string; signalId:
         </CardHeader>
 
         <CardContent>
-          <PayloadPreview data={payload} highlights={[highlightForSignal(signal)]} />
+          <PayloadPreview data={payload} highlights={[highlightForSignal(signal)]} mode={previewMode} />
         </CardContent>
       </Card>
     </div>
